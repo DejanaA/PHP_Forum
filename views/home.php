@@ -1,11 +1,15 @@
 <?php
 	require("../session.php");
-	require("../scripts/cssScripts.css");
+	
 
 ?>
 <html>
 <head>
-	<title></title>
+	<title>Home page</title>
+	<?php
+		require("../scripts/cssScripts.css");
+	?>
+	<link rel="stylesheet" type="text/css" href="../style/style.css">
 </head>
 <body>
 	<div class= "container">
