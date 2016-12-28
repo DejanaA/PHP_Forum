@@ -1,8 +1,15 @@
 <?php
 	require("../session.php");
-	
+	require("../db.php");
+$sql = "SELECT * FROM topic ";
+$results = $connection->query($sql);
 
+
+
+	
 ?>
+
+
 <html>
 <head>
 	<title>Home page</title>
@@ -59,6 +66,40 @@
 		    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>
+		<?php
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()){
+					$topic_id = $row['id'];
+				    $topic_subtopics_sql = "SELECT topic.id AS topic_id , topic.topic_name, sub_topic.id AS sub_topic_id FROM topic INNER JOIN sub_topic ON topic.id = sub_topic.topic_id WHERE topic.id = '$topic_id'";
+					$topic_subtopics = $connection->query($topic_subtopics_sql);
+				?>
+				
+				<div class="panel panel-default">
+				  <div class="panel-heading">
+				  
+				  	<a href="../delete.php" class="btn btn-danger btn-xs ">Delete</a>
+				  
+
+				  </div>
+				  <div class="panel-body">
+
+				    <?php echo $row['topic_name'];
+				    ?>
+
+				    <div id="subtopic_num"><i>Subtopics: </i><?php echo $topic_subtopics->num_rows?></div>
+				  </div>
+				</div>
+
+
+				<?php
+				}
+
+			}
+
+			else{
+				echo "No results";
+			}	
+		?>
 
 	</div>
 	
