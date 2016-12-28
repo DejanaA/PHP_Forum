@@ -19,6 +19,34 @@ $results = $connection->query($sql);
 	<link rel="stylesheet" type="text/css" href="../style/style.css">
 </head>
 <body>
+	<div class="modal fade" id="addTopicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					  	<form action="../addTopic.php" method="POST">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					        <h4 class="modal-title" id="myModalLabel">Add Topic</h4>
+					      </div>
+
+					      <div class="modal-body">
+
+					        <div class="input-group" style="margin: auto auto ; width:90%">
+									
+									<input  type="text" name="topicName" class="form-control" />
+									
+							</div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					        <button type="submit" class="btn btn-primary">Add</button>
+					      </div>
+					    </div>
+						</form>
+					  </div>
+	</div>
+
 	<div class= "container">
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
@@ -36,8 +64,7 @@ $results = $connection->query($sql);
 		    <!-- Collect the nav links, forms, and other content for toggling -->
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      <ul class="nav navbar-nav">
-		        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-		        <li><a href="#">Link</a></li>
+		        <li><a data-toggle="modal" data-target="#addTopicModal" href="#">Add Topic</a></li>
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
 		          <ul class="dropdown-menu">
@@ -73,13 +100,43 @@ $results = $connection->query($sql);
 				    $topic_subtopics_sql = "SELECT topic.id AS topic_id , topic.topic_name, sub_topic.id AS sub_topic_id FROM topic INNER JOIN sub_topic ON topic.id = sub_topic.topic_id WHERE topic.id = '$topic_id'";
 					$topic_subtopics = $connection->query($topic_subtopics_sql);
 				?>
-				
+
+				<div class="modal fade" id="updateModal<?php echo $row['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					  	<form action="../updateTopic.php" method="POST">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					        <h4 class="modal-title" id="myModalLabel"><?php echo $row['topic_name']  ?></h4>
+					      </div>
+
+					      <div class="modal-body">
+
+					        <div class="input-group" style="margin: auto auto ; width:90%">
+									
+									<input  type="text" name="topicName" value="<?php echo $row['topic_name']?>" class="form-control" />
+									<input type ="hidden"  name ="topicId" value ="<?php echo $row['id']?>"/>
+							</div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					        <button type="submit" class="btn btn-primary">Update</button>
+					      </div>
+					    </div>
+						</form>
+					  </div>
+					</div>
+
 				<div class="panel panel-default">
 				  <div class="panel-heading">
+				  	<button id="updateBtn" class="btn btn-info btn-xs" data-toggle="modal" data-target="#updateModal<?php echo $row['id']?>">Update</button>
 				  	<form action="../delete.php" method ="POST" >
 				  		<input type="hidden" name ="topic_id" value = "<?php echo $row['id']?>">
 				  		<button class="btn btn-danger btn-xs ">Delete</button>
 				  	</form>
+				  	
 
 				  </div>
 				  <div class="panel-body">

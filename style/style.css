@@ -14,3 +14,7 @@
 #subtopic_num{
 	float: right;
 }
+#updateBtn{
+	float: left;
+    margin-right: 5px;
+}
