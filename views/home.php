@@ -76,9 +76,10 @@ $results = $connection->query($sql);
 				
 				<div class="panel panel-default">
 				  <div class="panel-heading">
-				  
-				  	<a href="../delete.php" class="btn btn-danger btn-xs ">Delete</a>
-				  
+				  	<form action="../delete.php" method ="POST" >
+				  		<input type="hidden" name ="topic_id" value = "<?php echo $row['id']?>">
+				  		<button class="btn btn-danger btn-xs ">Delete</button>
+				  	</form>
 
 				  </div>
 				  <div class="panel-body">
@@ -95,9 +96,8 @@ $results = $connection->query($sql);
 				}
 
 			}
-
 			else{
-				echo "No results";
+				echo '<div style="text-align:center">No topics</div>';
 			}	
 		?>
 
