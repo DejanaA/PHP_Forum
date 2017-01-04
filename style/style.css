@@ -18,3 +18,8 @@
 	float: left;
     margin-right: 5px;
 }
+#topicDesc{
+	resize:none ; 
+	height:100px ; 
+	margin-top:10px;
+}

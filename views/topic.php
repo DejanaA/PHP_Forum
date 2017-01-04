@@ -1,8 +1,17 @@
 <?php
 	require("../session.php");
 	require("../db.php");
-$sql = "SELECT * FROM topic ";
-$results = $connection->query($sql);
+if (isset($_GET['topic'])){
+	$id = $_GET['topic'];
+	if ($id =="") {
+		header("Location: home.php");
+	}
+	$sql = "SELECT * FROM sub_topic WHERE topic_id = '$id'";
+	$results = $connection->query($sql);
+	$sql2 = "SELECT * FROM topic WHERE id = '$id'";
+	$topic_results = $connection->query($sql2);
+	$topicrow = $topic_results->fetch_assoc();
+}
 	
 ?>
 
@@ -16,23 +25,22 @@ $results = $connection->query($sql);
 	<link rel="stylesheet" type="text/css" href="../style/style.css">
 </head>
 <body>
-	<div class="modal fade" id="addTopicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="addSubTopicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					  <div class="modal-dialog" role="document">
-					  	<form action="../addTopic.php" method="POST">
+					  	<form action="../addSubTopic.php" method="POST">
 					    <div class="modal-content">
 					      <div class="modal-header">
 					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					          <span aria-hidden="true">&times;</span>
 					        </button>
-					        <h4 class="modal-title" id="myModalLabel">Add Topic</h4>
+					        <h4 class="modal-title" id="myModalLabel">Add Subtopic</h4>
 					      </div>
 
 					      <div class="modal-body">
 
 					        <div class="input-group" style="margin: auto auto ; width:90%">
-									
-									<input  type="text" name="topicName" class="form-control" />
-									<textarea id="topicDesc" name="topicDescription" class="form-control"></textarea>
+									<input type="hidden" name="topic_id" value="<?php echo $topicrow['id']?>"/>
+									<input  type="text" name="subTopicName" class="form-control" />
 
 									
 							</div>
@@ -63,7 +71,7 @@ $results = $connection->query($sql);
 		    <!-- Collect the nav links, forms, and other content for toggling -->
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      <ul class="nav navbar-nav">
-		        <li><a data-toggle="modal" data-target="#addTopicModal" href="#">Add Topic</a></li>
+		        <li><a data-toggle="modal" data-target="#addSubTopicModal" href="#">Add Subtopic</a></li>
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
 		          <ul class="dropdown-menu">
@@ -92,71 +100,54 @@ $results = $connection->query($sql);
 		    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>
-		<?php
-			if ($results->num_rows > 0) {
-				while($row = $results->fetch_assoc()){
-					$topic_id = $row['id'];
-				    $topic_subtopics_sql = "SELECT topic.id AS topic_id , topic.topic_name, sub_topic.id AS sub_topic_id FROM topic INNER JOIN sub_topic ON topic.id = sub_topic.topic_id WHERE topic.id = '$topic_id'";
-					$topic_subtopics = $connection->query($topic_subtopics_sql);
+		
+		
+		<div class="panel panel-default">
+		  <!-- Default panel contents -->
+		 
+		  <div class="panel-heading"><?php echo $topicrow['topic_name']?>
+		  		
+		  </div>
+
+		  <div class="panel-body">
+		    <p><?php echo $topicrow['description']?></p>
+		  </div>
+
+		  <!-- List group -->
+		  <ul class="list-group">
+		  	<?php
+			while ($row = $results->fetch_assoc()) {
+				$sub_id = $row['id'];
+				$sql3 = "SELECT sub_topic.id AS sub_topic_id , comments.comment_text, sub_topic.id AS sub_topic_id FROM sub_topic INNER JOIN comments ON sub_topic.id = comments.subtopic_id WHERE sub_topic.id = '$sub_id'";
+				$results3 = $connection->query($sql3);
+
 				?>
-
-				<div class="modal fade" id="updateModal<?php echo $row['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					  <div class="modal-dialog" role="document">
-					  	<form action="../updateTopic.php" method="POST">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					          <span aria-hidden="true">&times;</span>
-					        </button>
-					        <h4 class="modal-title" id="myModalLabel"><?php echo $row['topic_name']  ?></h4>
-					      </div>
-
-					      <div class="modal-body">
-
-					        <div class="input-group" style="margin: auto auto ; width:90%">
-									
-									<input  type="text" name="topicName" value="<?php echo $row['topic_name']?>" class="form-control" />
-									<textarea id="topicDesc" name="topicDescription" class="form-control" ><?php echo $row['description']?></textarea>
-									<input type ="hidden"  name ="topicId" value ="<?php echo $row['id']?>"/>
-							</div>
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					        <button type="submit" class="btn btn-primary">Update</button>
-					      </div>
-					    </div>
-						</form>
-					  </div>
-					</div>
-
-				<div class="panel panel-default">
-				  <div class="panel-heading">
-				  	<button id="updateBtn" class="btn btn-info btn-xs" data-toggle="modal" data-target="#updateModal<?php echo $row['id']?>">Update</button>
-				  	<form action="../delete.php" method ="POST" >
-				  		<input type="hidden" name ="topic_id" value = "<?php echo $row['id']?>">
-				  		<button class="btn btn-danger btn-xs ">Delete</button>
-				  	</form>
-				  	
-
-				  </div>
-				  <div class="panel-body">
-
-				    <?php echo "<a href='topic.php?topic=" . $row['id'] . "'>" . $row['topic_name'] . "</a>";
-				    ?>
-
-				    <div id="subtopic_num"><i>Subtopics: </i><?php echo $topic_subtopics->num_rows?></div>
-				  </div>
-				</div>
-
+					<li class="list-group-item"><?php echo $row['name']?>
+						<span class="pull-right">
+							<form action="../deleteSubTopic.php" method="POST">
+								<input type="hidden" name="subtopic_id" value="<?php echo $row['id']?>">
+								<input type="hidden" name="topic_id" value="<?php echo $topicrow['id']?>">
+								<button type="submit">
+			  						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			  					</button>
+			  				</form>
+		  				</span>
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+							<?php echo $results3->num_rows?>
+						</span>
+						
+					</li>
 
 				<?php
-				}
-
 			}
-			else{
-				echo '<div style="text-align:center">No topics</div>';
-			}	
-		?>
+
+			?> 
+		  </ul>
+		</div>
+				
+
+
 
 	</div>
 	
