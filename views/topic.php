@@ -54,6 +54,8 @@ if (isset($_GET['topic'])){
 					  </div>
 	</div>
 
+	
+
 	<div class= "container">
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
@@ -101,7 +103,7 @@ if (isset($_GET['topic'])){
 		  </div><!-- /.container-fluid -->
 		</nav>
 		
-		
+	
 		<div class="panel panel-default">
 		  <!-- Default panel contents -->
 		 
@@ -113,6 +115,7 @@ if (isset($_GET['topic'])){
 		    <p><?php echo $topicrow['description']?></p>
 		  </div>
 
+
 		  <!-- List group -->
 		  <ul class="list-group">
 		  	<?php
@@ -122,7 +125,38 @@ if (isset($_GET['topic'])){
 				$results3 = $connection->query($sql3);
 
 				?>
-					<li class="list-group-item"><?php echo $row['name']?>
+
+					<div class="modal fade" id="updateSubTopicModal<?php echo $row['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					  	<form action="../updateSubTopic.php" method="POST">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					        <h4 class="modal-title" id="myModalLabel"><?php echo $row['name']  ?></h4>
+					      </div>
+
+					      <div class="modal-body">
+
+					        <div class="input-group" style="margin: auto auto ; width:90%">
+									
+									<input type="text" name="subTopicName" value="<?php echo $row['name']?>" class="form-control"/>
+									<input type ="hidden"  name ="subTopicId" value ="<?php echo $row['id']?>"/>
+									<input type ="hidden"  name ="topicId" value ="<?php echo $row['topic_id']?>"/>
+
+							</div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					        <button type="submit" class="btn btn-primary">Update</button>
+					      </div>
+					    </div>
+						</form>
+					  </div>
+					</div>
+
+					<li class="list-group-item"><a href="subtopic.php/?subtopic=<?php echo $row['id']?>"><?php echo $row['name']?></a>
 						<span class="pull-right">
 							<form action="../deleteSubTopic.php" method="POST">
 								<input type="hidden" name="subtopic_id" value="<?php echo $row['id']?>">
@@ -132,6 +166,10 @@ if (isset($_GET['topic'])){
 			  					</button>
 			  				</form>
 		  				</span>
+		  				<span class="pull-right">
+							<button id="updateBtn" style="margin-left:30px " class="btn btn-info btn-xs" data-toggle="modal" data-target="#updateSubTopicModal<?php echo $row['id']?>">Update</button>
+						</span>
+
 						<span class="pull-right">
 							<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
 							<?php echo $results3->num_rows?>

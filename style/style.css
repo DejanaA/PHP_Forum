@@ -16,10 +16,20 @@
 }
 #updateBtn{
 	float: left;
-    margin-right: 5px;
+    margin-right: 10px;
+   
 }
 #topicDesc{
 	resize:none ; 
 	height:100px ; 
 	margin-top:10px;
+}
+#btn_post{
+	margin-top: 5px;
+
+}
+#comment_area{
+	width:100% ;
+	 resize:none ; 
+	 height:60px;
 }
