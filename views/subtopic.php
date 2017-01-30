@@ -29,6 +29,41 @@
 <body>
 
 	<div class= "container">
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" href="#">PHP Forum</a>
+		    </div>
+
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		        <li><a data-toggle="modal" data-target="#addTopicModal" href="#">Add Topic</a></li>
+		       
+		      </ul>
+		     
+		      <ul class="nav navbar-nav navbar-right">
+		        <li><a href="#"><?php echo $loged_user_name . " " .  $loged_user_lastname ?>
+		        			<?php if ($loged_user_r == 1) {
+		        				?>
+		        				(Admin)
+		        				<?php
+		        			}?>
+		        </a></li>
+		        <li class="dropdown">
+		          <a href="../logout.php" class="dropdown-toggle"  role="button" aria-haspopup="true" aria-expanded="false">Log out </a>
+		        </li>
+		      </ul>
+		    </div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>
 		<!-- <nav class="navbar navbar-default"> -->
 			<div class="jumbotron">
 			  <h1><?php echo $subtopicrow['name']?></h1>
@@ -39,7 +74,7 @@
 		<div class="col-md-12">
 			<form action="/PHP_Forum/postNewComment.php" method="POST">
 				<input type="hidden" name= "subtopic_id" value="<?php echo $subtopicrow['id']?>">
-				<textarea id="comment_area" class="form-control"name="comment" ></textarea>
+				<textarea id="comment_area" class="form-control" name="comment" ></textarea>
 				<button id="btn_post" class="btn btn-default" type="submit" >Post</button>
 			</form>
 		</div>
@@ -51,7 +86,41 @@
 				$user_results = $connection->query($sql3);
 				$user_row = $user_results->fetch_assoc();
 				?>
-				<div class="col-md-12">
+				<div class="modal fade" id="updateCommentModal<?php echo $row['id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					  	<form action="/PHP_Forum/updateComment.php" method="POST">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					        
+					      </div>
+
+					      <div class="modal-body">
+
+					        <div class="input-group" style="margin: auto auto ; width:90%">
+									
+								<input type="hidden" name="comment_id" value="<?php echo $row['id']?>">
+								<input type="hidden" name= "subtopic_id" value="<?php echo $row['subtopic_id']?>">
+								<input type="hidden" name= "user_id" value="<?php echo $row['user_id']?>">
+
+								<textarea id="comment_area" class="form-control" name="comment"><?php echo $row['comment_text']?></textarea>
+
+								
+
+							</div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					        <button type="submit" class="btn btn-primary">Update</button>
+					      </div>
+					    </div>
+						</form>
+					  </div>
+					</div>
+				
+				<div class="col-md-10">
 				<hr>
 				<div class="media">
 				  <div class="media-left media-middle">
@@ -66,18 +135,29 @@
 				  <?php 
 				  	if ($loged_user_id == $row['user_id']) {
 				  		?>
-				  		<form action="/PHP_Forum/deleteComment.php" method="POST">
-				  			<input type="hidden" name="comment_id" value="<?php echo $row['id'];?>">
+				  		
+				  		<span class="pull-right">
+							<button  class="btn btn-info btn-xs" data-toggle="modal" style="margin-top: -40px"  data-target="#updateCommentModal<?php echo $row['id']?>">Update</button>
+						</span>
+						
+				  		<form action="/PHP_Forum/deleteComment.php" method="POST"> 
+				  			<input type="hidden" name="comment_id" value="<?php echo $row['id']?>">
 				  			<input type="hidden" name = "subtopic_id" value="<?php echo $row['subtopic_id']?>">
-				  		<button type="submit"  class="close" aria-label="Close">
-					        <span aria-hidden="true">&times;</span>
+				  			
+				  		<button  type="submit"  class="close pull-right" aria-label="Close" style="margin-top: -30px ; margin-right:70px" >
+					        <span  aria-hidden="true">&times;</span>
 					    </button>
-					    </form>
+					   	</form>				 
+
+
+					    
+					   
 				  		<?php
 				  	}
 				  ?>
 				</div>
 				</div>
+				
 				<?php
 			}
 		}
