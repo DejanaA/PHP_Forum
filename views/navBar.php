@@ -14,18 +14,34 @@
 		    
 		    <!-- Collect the nav links, forms, and other content for toggling -->
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		    	<ul class="nav navbar-nav">
 		    	<?php
+
 		    	if ($loged_user_r == 1) {
 		    		?>
-		    		<ul class="nav navbar-nav">
+		    		
 		    		<li><a data-toggle="modal"  href="/PHP_Forum/views/adminPanel.php">Admin panel</a></li>
 		   		 <?php
 		   		}
 
 		    	?>
+		    	<?php
+		    		if (basename($_SERVER['PHP_SELF']) == "home.php") {
+		    			?>
+		    			<li><a data-toggle="modal" data-target="#addTopicModal" href="#">Add Topic</a></li>
+		    			<?php
+		    		}
+		    		else if(basename($_SERVER['PHP_SELF']) == "topic.php"){
+		    			?>
+		    			<li><a data-toggle="modal" data-target="#addSubTopicModal" href="#">Add SubTopic</a></li>
+
+		    			<?php
+		    		}
+		    			
+
+		    	?>
 		      
-		        <li><a data-toggle="modal" data-target="#addTopicModal" href="#">Add Topic</a></li>
-		       
+		      
 		      </ul>
 		     
 		      <ul class="nav navbar-nav navbar-right">

@@ -105,7 +105,7 @@
 				  		?>
 				  		
 				  		<span class="pull-right">
-							<button  class="btn btn-info btn-xs" data-toggle="modal" style="margin-top: -40px"  data-target="#updateCommentModal<?php echo $row['id']?>">Update</button>
+							<button  class="btn btn-info btn-xs" data-toggle="modal" style="margin-top: -30px"  data-target="#updateCommentModal<?php echo $row['id']?>">Update</button>
 						</span>
 						
 				  		<form action="/PHP_Forum/deleteComment.php" method="POST"> 

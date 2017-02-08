@@ -1,4 +1,5 @@
-<?php
+ <?php
+ 
 	require("db.php");
 
 	session_start();
@@ -17,7 +18,5 @@
 				
 				$results3 = $connection->query($sql3);	
 				$loged_user_role_result = $results3->fetch_assoc();
-				$loged_user_role = $loged_user_role_result['role_name'];
-
-	
+				$loged_user_role = $loged_user_role_result['role_name'];	
 ?>
